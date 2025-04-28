@@ -6,10 +6,10 @@ use App\Entity\User;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Constraints\Regex;
+use App\Form\Type\UserType;
+use Symfony\Component\HttpFoundation\Request;
 
 final class UserController extends AbstractController
 {
@@ -20,12 +20,39 @@ final class UserController extends AbstractController
         $user->setSurname('Ariza Rosales');
         $user->setAge(21);
         $user->setDni('12345678A');
-        $user->setCreatedAt(new DateTimeImmutable("now"));
 
         $entityManager->persist($user);
 
         $entityManager->flush();
 
         return new Response('Saved new user with id ' . $user->getId());
+    }
+
+    #[Route('user/form', name:'app_form'), ]
+    public function processForm(Request $request, EntityManagerInterface $entityManager): Response {
+        
+        $user = new User();
+
+        $form = $this->createForm(UserType::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+
+            $entityManager->persist($user);
+
+            $entityManager->flush();
+
+            return $this->redirectToRoute('user_success');
+        }
+
+        return $this->render('user/form.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('user/confirmed', name:'user_success')]
+    public function index(){
+        return $this->render('user/success.html.twig');
     }
 }

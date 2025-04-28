@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Formulario básico{% endblock %}
+
+{% block body %}
+
+{{ form_start(form , {'method': 'POST'})}}
+    {{ form_errors(form) }}
+
+    {{ form_row(form.name, { 'label': 'Nombre:'}) }}
+    {{ form_row(form.surname, { 'label': 'Apellidos:'})}}
+    {{ form_row(form.age, { 'label': 'Edad:'}) }}
+    {{ form_row(form.dni, { 'label': 'Dni:'}) }}
+
+    {{ form_row(form.save, { 'label': 'Submit me' }) }}
+{{ form_end(form) }}
+{% endblock %}
