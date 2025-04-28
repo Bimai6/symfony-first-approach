@@ -86,10 +86,7 @@ class User
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
-    {
-        $this->created_at = $created_at;
-
-        return $this;
+    public function __construct() {
+        $this->created_at = new \DateTimeImmutable("now");
     }
 }
