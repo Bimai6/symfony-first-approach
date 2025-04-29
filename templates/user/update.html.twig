@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Formulario de Edición{% endblock %}
+
+{% block body %}
+
+<h1>Formulario para editar usuario con nombre {{username}}</h1>
+
+{{ form_start(form, 
+    { 'method': 'POST', 'attr' : {'novalidate' : 'novalidate'} })}}
+    {{ form_errors(form) }}
+
+    {{ form_row(form.name, { 'label': 'Nombre:'}) }}
+    {{ form_row(form.surname, { 'label': 'Apellidos:'})}}
+    {{ form_row(form.age, { 'label': 'Edad:'}) }}
+    {{ form_row(form.dni, { 'label': 'Dni:'}) }}
+
+    {{ form_row(form.save, { 'label': 'Submit me' }) }}
+{{ form_end(form) }}
+{% endblock %}
