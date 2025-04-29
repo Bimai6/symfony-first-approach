@@ -4,7 +4,8 @@
 
 {% block body %}
 
-{{ form_start(form , {'method': 'POST'})}}
+{{ form_start(form, 
+    { 'method': 'POST', 'attr' : {'novalidate' : 'novalidate'} })}}
     {{ form_errors(form) }}
 
     {{ form_row(form.name, { 'label': 'Nombre:'}) }}
