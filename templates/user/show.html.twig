@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pagina del Usuario {{user.id}}{% endblock %}
+
+{% block body %}
+
+    <h1>Hola, {{user.name}} {{user.surname}}</h1>
+    <h3>Edad: {{user.age}}</h3>
+    <h3>Dni: {{user.dni}}</h3>  
+{% endblock %}

@@ -71,7 +71,9 @@ final class UserController extends AbstractController
             );
         }
 
-        return new Response('Check out this great user: '.$user->getName());
+        return $this->render('user/show.html.twig', [
+            'user' => $user
+        ]);
     }
 
     #[Route('user/edit/{id}', name:'user_update')]
