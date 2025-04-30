@@ -78,6 +78,12 @@ final class UserController extends AbstractController
     public function update(Request $request, int $id) : Response{
         $user= $this->em->getRepository(User::class)->find($id);
 
+        if (!$user) {
+            throw $this->createNotFoundException(
+                'No user found for id '.$id
+            );
+        }
+
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
@@ -93,5 +99,20 @@ final class UserController extends AbstractController
             'form' => $form,
             'username' => $user->getName()
         ]);
+    }
+
+    #[Route('user/delete/{id}', name:'user_delete')]
+    public function delete(int $id): Response{
+        $user = $this->em->getRepository(User::class)->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException(
+                'No user found for id '.$id
+            );
+        }
+
+        $this->em->remove($user);
+        $this->em->flush();
+        return new Response('User with id ' . $id . ' has been removed!');
     }
 }
