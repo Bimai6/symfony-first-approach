@@ -115,6 +115,6 @@ final class UserController extends AbstractController
 
         $this->em->remove($user);
         $this->em->flush();
-        return new Response('User with id ' . $id . ' has been removed!');
+        return new Response('User with id '. $id .' has been removed!');
     }
 }
