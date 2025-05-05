@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -24,16 +23,11 @@ class Post
     #[ORM\Column(length: 255)]
     private ?string $content = null;
 
-    /**
-     * @var Collection<int, category>
-     */
-    #[ORM\OneToMany(targetEntity: category::class, mappedBy: 'post')]
-    private Collection $category;
+    #[ORM\ManyToOne(inversedBy: 'post')]
+    private ?Category $category;
 
-    public function __construct()
-    {
-        $this->category = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(inversedBy: 'post')]
+    private ?User $user;
 
     public function getId(): ?int
     {
@@ -76,32 +70,26 @@ class Post
         return $this;
     }
 
-    /**
-     * @return Collection<int, category>
-     */
-    public function getCategory(): Collection
+    public function getCategory(): Category
     {
         return $this->category;
     }
 
-    public function addCategory(category $category): static
+    public function setCategory(?Category $category): static
     {
-        if (!$this->category->contains($category)) {
-            $this->category->add($category);
-            $category->setPost($this);
-        }
+        $this->category = $category;
 
         return $this;
     }
 
-    public function removeCategory(category $category): static
+    public function getUser(): User
     {
-        if ($this->category->removeElement($category)) {
-            // set the owning side to null (unless already changed)
-            if ($category->getPost() === $this) {
-                $category->setPost(null);
-            }
-        }
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
