@@ -8,8 +8,10 @@ use App\Entity\Category;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
+use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
@@ -57,5 +59,18 @@ class DashboardController extends AbstractDashboardController
 
         yield MenuItem::section('Users');
         yield MenuItem::linkToCrud('Users', 'fa fa-user', User::class);
-    }   
+        yield MenuItem::linkToExitImpersonation('Stop impersonation', 'fa fa-exit');
+    }
+
+    public function configureUserMenu(UserInterface $user): UserMenu
+    {
+        $user = $user instanceof User ? $user : null;
+
+    return parent::configureUserMenu($user)
+        ->setName($user ? $user->getName() : 'Guest')
+        ->addMenuItems([
+            MenuItem::linkToRoute('Perfil', 'fa fa-user', 'user_profile'),
+            MenuItem::linkToLogout('Cerrar sesión', 'fa fa-sign-out'),
+        ]);
+    }
 }
