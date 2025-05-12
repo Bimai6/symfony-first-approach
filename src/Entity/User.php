@@ -6,9 +6,11 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -35,6 +37,16 @@ class User
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
+
+    #[ORM\Column(length: 180, unique: true)]
+    private ?string $email = null;
+
+    #[ORM\Column]
+    private array $roles = [];
+
+    #[ORM\Column]
+    private ?string $password = null;
+
 
     #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'user')]
     private Collection $post;
@@ -97,6 +109,12 @@ class User
         return $this->created_at;
     }
 
+    public function setCreatedAt(?\DateTimeImmutable $date) :static
+    {
+        $this->created_at=$date;
+        return $this;
+    }
+
     public function getPost(): Collection
     {
         return $this->post;
@@ -115,7 +133,6 @@ class User
     public function removePost(post $post): static
     {
         if ($this->post->removeElement($post)) {
-            // set the owning side to null (unless already changed)
             if ($post->getUser() === $this) {
                 $post->setUser(null);
             }
@@ -126,5 +143,48 @@ class User
 
     public function __construct() {
         $this->created_at = new \DateTimeImmutable("now");
+        array_push($this->roles, 'ROLE_USER');
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    public function getEmail() : string {
+        return $this->email;
+    }
+
+    public function setEmail(string $email){
+        $this->email=$email;
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+        return $this;
+    }
+
+    public function eraseCredentials()
+    {
+
     }
 }
