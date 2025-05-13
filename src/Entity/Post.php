@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
-use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
@@ -27,6 +27,7 @@ class Post
     private ?Category $category;
 
     #[ORM\ManyToOne(inversedBy: 'post')]
+    #[Assert\NotNull(message: "Debes seleccionar una categoría.")]
     private ?User $user;
 
     public function getId(): ?int
