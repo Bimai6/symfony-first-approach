@@ -12,8 +12,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Attribute\Route;
 
-#[AdminDashboard(routePath: '/admin', routeName: 'admin')]
+#[AdminDashboard(routePath: '/admin/{_locale}', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
 {
     public function index(): Response
@@ -46,7 +48,9 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Symfony Approach');
+            ->setTitle('Symfony Approach')
+            ->setTranslationDomain('admin')
+            ->setLocales(['es', 'en', 'fr','it']);
     }
 
     public function configureMenuItems(): iterable
@@ -69,8 +73,17 @@ class DashboardController extends AbstractDashboardController
     return parent::configureUserMenu($user)
         ->setName($user ? $user->getName() : 'Guest')
         ->addMenuItems([
-            MenuItem::linkToRoute('Perfil', 'fa fa-user', 'user_profile'),
-            MenuItem::linkToLogout('Cerrar sesión', 'fa fa-sign-out'),
+            MenuItem::linkToRoute('Perfil', 'fa fa-user', 'user_profile')
         ]);
     }
+
+    
+
+    #[Route('/admin', name: 'admin_redirect')]
+    public function redirectToLocale(Request $request): Response
+    {
+        $preferredLocale = $request->getPreferredLanguage(['en', 'es', 'fr', 'it']);
+        return $this->redirectToRoute('admin', ['_locale' => $preferredLocale ?? 'en']);
+    }
+
 }
