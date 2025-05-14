@@ -7,10 +7,10 @@ use App\Entity\Category;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use Symfony\Component\Security\Core\Security;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 
 class PostCrudController extends AbstractCrudController
 {
@@ -64,4 +64,12 @@ class PostCrudController extends AbstractCrudController
         ];
     }
     
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('title')
+            ->add('description')
+            ->add('category')
+        ;
+    }
 }
