@@ -12,7 +12,7 @@ final class SecurityController extends AbstractController
     #[Route('/login', name: 'login')]
     public function login(AuthenticationUtils $authUtils): Response
     {
-    return $this->render('security/login.html.twig', [
+    return $this->render('@EasyAdmin/page/login.html.twig', [
         'error' => $authUtils->getLastAuthenticationError(),
         'last_username' => $authUtils->getLastUsername(),
         'csrf_token_intention' => 'authenticate',
