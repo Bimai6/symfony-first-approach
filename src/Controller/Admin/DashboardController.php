@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[AdminDashboard(routePath: '/admin/{_locale}', routeName: 'admin')]
+#[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
 {
     public function index(): Response
@@ -75,15 +75,6 @@ class DashboardController extends AbstractDashboardController
         ->addMenuItems([
             MenuItem::linkToRoute('Perfil', 'fa fa-user', 'user_profile')
         ]);
-    }
-
-    
-
-    #[Route('/admin', name: 'admin_redirect')]
-    public function redirectToLocale(Request $request): Response
-    {
-        $preferredLocale = $request->getPreferredLanguage(['en', 'es', 'fr', 'it']);
-        return $this->redirectToRoute('admin', ['_locale' => $preferredLocale ?? 'en']);
     }
 
 }
